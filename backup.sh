@@ -53,7 +53,7 @@ commands=(
     "aws iam list-policies --scope Local --output yaml > raw_$2/policies.yaml"
 )
 
-# Start saving data
+# Save all command data
 mkdir "raw_$2"
 for cmd in "${commands[@]}"; do
     echo $cmd
@@ -61,4 +61,24 @@ for cmd in "${commands[@]}"; do
     check_last_command
 done
 
+# Save all user policies
+mkdir "raw_$2/user_policies"
+usernames=$(awk '/UserName:/ {print $2}' "raw_$2/users.yaml")
+for username in $usernames; do
+    eval "aws iam list-attached-user-policies --user-name $username --output yaml > raw_$2/user_policies/$username.yaml"
+done
 
+
+# Save policy details
+mkdir "raw_$2/policy_statements"
+arns=($(awk '/- Arn:/ {print $3}' "raw_$2/policies.yaml"))
+versions=($(awk '/DefaultVersionId:/ {print $2}' "raw_$2/policies.yaml"))
+
+for i in "${!arns[@]}"; do
+
+    arn="${arns[$i]}"
+
+    # IMPORTANT!! This doesn't work if there's a path in the name, needs more thinking
+    name="${arn#*/}"
+    eval "aws iam get-policy-version --policy-arn $arn --version-id  ${versions[$i]} --output yaml > raw_$2/policy_statements/$name.yaml"
+done
