@@ -15,8 +15,8 @@
 
 # Execution
 
-1. gobbc aws-credentials -account 528761583664
-2. bash backup.sh -a 528761583664
+1. `gobbc aws-credentials -account 528761583664`
+2. `bash backup.sh -a 528761583664`
 
 This will create the following:
 
@@ -39,4 +39,42 @@ This will create the following:
 │   │   ├── modav.Name_Surname.yaml
 │   │   ├── ...
 
+```
+
+# Sample output
+
+`policy_statemets/policy.yaml`
+
+```
+PolicyVersion:
+  CreateDate: '2017-08-10T11:26:29+00:00'
+  Document:
+    Statement:
+    - Action:
+      - cloudformation:DescribeStacks
+      - cloudformation:DescribeStackEvents
+      - cloudformation:DescribeStackResource
+      - cloudformation:DescribeStackResources
+      - cloudformation:GetTemplate
+      - cloudformation:List*
+      - cloudformation:CreateStack
+      - cloudformation:UpdateStack
+      - ec2:*
+      Effect: Allow
+      Resource: '*'
+    Version: '2012-10-17'
+  IsDefaultVersion: true
+  VersionId: v4
+```
+
+`role_policies/role.yaml`
+
+```
+AttachedPolicies:
+- PolicyArn: arn:aws:iam::528761583664:policy/ModavJmlResources-ModavModavDevPolicy-12V8J3OJ9JAOB
+  PolicyName: ModavJmlResources-ModavModavDevPolicy-12V8J3OJ9JAOB
+- PolicyArn: arn:aws:iam::528761583664:policy/ModavJmlResources-ModavReadonlyPolicy-11OAFLW96I0N0
+  PolicyName: ModavJmlResources-ModavReadonlyPolicy-11OAFLW96I0N0
+- PolicyArn: arn:aws:iam::528761583664:policy/ModavJmlResources-ModavSupportPolicy-11PTAVAMVWVAN
+  PolicyName: ModavJmlResources-ModavSupportPolicy-11PTAVAMVWVAN
 ```
