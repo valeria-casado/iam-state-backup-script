@@ -1,4 +1,5 @@
 #!/bin/sh
+
 ### Start of validation ###
 
 # Check if AWS CLI version is 2.*
@@ -36,6 +37,7 @@ fi
 
 ### End of validation ###
 
+
 # Make sure we're not saving anything corrupted
 check_last_command() {
     if [ $? -ne 0 ]; then
@@ -70,7 +72,7 @@ for username in $usernames; do
 done
 
 
-#TODO: Save all role policies
+# Save all role policies
 echo "Filling /role_policies/..."
 mkdir "raw_$2/role_policies"
 roles=$(awk '/RoleName:/ {print $2}' "raw_$2/roles.yaml")
@@ -89,6 +91,7 @@ for i in "${!arns[@]}"; do
 
     arn=${arns[$i]}
 
+    # Don't include the policy path in the filename
     name=${arn##*/}
     eval "aws iam get-policy-version --policy-arn $arn --version-id  ${versions[$i]} --output yaml > raw_$2/policy_statements/$name.yaml"
 
