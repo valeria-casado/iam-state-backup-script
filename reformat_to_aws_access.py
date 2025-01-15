@@ -11,6 +11,15 @@ def main():
     account_id = sys.argv[1]
     print(f"Processing account ID: {account_id}")
 
+    # to make an account file we need
+
+    # Account number (stdin)
+    # Account name (stdin)
+
+    # roles > users
+     
+
+
 
 
 if __name__ == "__main__":

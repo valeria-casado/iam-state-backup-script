@@ -7,7 +7,7 @@ if [[ $aws_version != aws-cli/2* ]]; then
     echo "Error: AWS CLI version 2 is required"
     exit 0
 fi
-    
+
 # if $1 does not exist or it's help
 if [ -z "$1" ] || [ "$1" == "help" ]; then
     echo "Missing positional argument: -a or -account [number]"
@@ -62,6 +62,7 @@ for cmd in "${commands[@]}"; do
 done
 
 # Save all user policies
+echo "Filling /user_policies/..."
 mkdir "raw_$2/user_policies"
 usernames=$(awk '/UserName:/ {print $2}' "raw_$2/users.yaml")
 for username in $usernames; do
@@ -69,16 +70,26 @@ for username in $usernames; do
 done
 
 
+#TODO: Save all role policies
+echo "Filling /role_policies/..."
+mkdir "raw_$2/role_policies"
+roles=$(awk '/RoleName:/ {print $2}' "raw_$2/roles.yaml")
+for role in $roles; do
+    eval "aws iam list-attached-role-policies --role-name $role --output yaml > raw_$2/role_policies/$role.yaml"
+done
+
+
 # Save policy details
+echo "Filling /policy_statements/..."
 mkdir "raw_$2/policy_statements"
 arns=($(awk '/- Arn:/ {print $3}' "raw_$2/policies.yaml"))
 versions=($(awk '/DefaultVersionId:/ {print $2}' "raw_$2/policies.yaml"))
 
 for i in "${!arns[@]}"; do
 
-    arn="${arns[$i]}"
+    arn=${arns[$i]}
 
-    # IMPORTANT!! This doesn't work if there's a path in the name, needs more thinking
-    name="${arn#*/}"
+    name=${arn##*/}
     eval "aws iam get-policy-version --policy-arn $arn --version-id  ${versions[$i]} --output yaml > raw_$2/policy_statements/$name.yaml"
+
 done
