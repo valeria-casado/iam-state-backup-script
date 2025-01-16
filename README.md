@@ -1,7 +1,3 @@
-# Dependencies
-
-1. gobbc
-
 
 # IMPORTANT
 
@@ -13,7 +9,12 @@
 [Managed vs inline](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_managed-vs-inline.html)
 
 
-# Execution
+# Dependencies
+
+1. gobbc
+
+
+# Execute backup
 
 1. `gobbc aws-credentials -account 528761583664`
 2. `bash backup.sh -a 528761583664`
@@ -41,7 +42,7 @@ This will create the following:
 
 ```
 
-# Sample output
+# Sample backup output
 
 `policy_statemets/policy.yaml`
 
@@ -78,3 +79,9 @@ AttachedPolicies:
 - PolicyArn: arn:aws:iam::528761583664:policy/ModavJmlResources-ModavSupportPolicy-11PTAVAMVWVAN
   PolicyName: ModavJmlResources-ModavSupportPolicy-11PTAVAMVWVAN
 ```
+
+# Reformat policy
+
+1. Create python environment
+2. Install requirements
+3. `python3 reformatter.py <account number> -p <policy name as seen on filename>`
