@@ -16,8 +16,6 @@ def is_valid_utf_format(date_string):
 def transform_policy(account_number, policy_name):
 
     # Check that both of these files exists
-    # Only really need the role policy one, but for general health
-    check_exists(f'./raw_{account_number}/policies.yaml')
     check_exists(f'./raw_{account_number}/policy_statements/{policy_name}.yaml')
         
     with open(f"./raw_{account_number}/policy_statements/{policy_name}.yaml", 'r') as stream:
@@ -84,7 +82,12 @@ def transform_policy(account_number, policy_name):
 def check_exists(path) -> bool:
     exists = os.path.exists(path)
     if not exists:
-        print(f'Path {path} not found in root directory.')
+        print(f'File {path} not found in root directory.')
+        print('Please select one of the following files:')
+        print('-----------------------------------------')
+        for file in os.listdir(os.path.dirname(path)):
+            if file.endswith('.yaml'):
+                print(file)
         sys.exit(1)
     else: return True
     
