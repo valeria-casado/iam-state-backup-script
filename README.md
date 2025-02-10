@@ -85,3 +85,11 @@ AttachedPolicies:
 1. Create python environment
 2. Install requirements
 3. `python3 reformatter.py <account number> -p <policy name as seen on filename>`
+
+# Remove inline policies
+You can omit step 2 if it's done.
+
+1. `gobbc aws-credentials -account 528761583664`
+2. `bash backup.sh -a 528761583664`
+3. `bash remove_inline.sh -a 528761583664`
+4. Check accounts manually
